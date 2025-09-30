@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env
+fresh_env/
+
+# Node.js (for HackHive platform)
+hackhive-platform/node_modules/
+hackhive-platform/.next/
+hackhive-platform/.env.local
+hackhive-platform/.env.development.local
+hackhive-platform/.env.production.local
+hackhive-platform/out/
+
+# Model cache and ML artifacts
+*.pkl
+*.pt
+*.bin
+model_cache/
+.cache/
+transformers_cache/
+huggingface_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Build artifacts
+dist/
+build/
+
+# Data files (optional - exclude large datasets)
+data/large_datasets/
+*.csv
+sample_econs_comments.csv
+
+# Windows batch files (optional)
+*.bat
+
+# Temporary files
+*.tmp
+*.temp
