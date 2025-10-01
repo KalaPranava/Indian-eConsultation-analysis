@@ -1,0 +1,16 @@
+{
+  "name": "indian-econsultation-analysis",
+  "version": "1.0.0",
+  "description": "AI-powered analysis platform for Indian e-consultation feedback",
+  "scripts": {
+    "build": "cd hackhive-platform && npm install && npm run build",
+    "start": "cd hackhive-platform && npm start",
+    "dev": "cd hackhive-platform && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KalaPranava/Indian-eConsultation-analysis.git"
+  },
+  "author": "KalaPranava",
+  "license": "MIT"
+}
