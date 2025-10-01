@@ -1,7 +1,13 @@
+"use client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BarChart3, Cloud, FileText } from "lucide-react"
+import { BarChart3, Cloud, FileText, ArrowDown } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useCallback } from "react"
 
 export function FeaturesSection() {
+  const scrollToGoals = useCallback(() => {
+    document.getElementById("goals")?.scrollIntoView({ behavior: "smooth" })
+  }, [])
   const features = [
     {
       icon: BarChart3,
@@ -24,11 +30,19 @@ export function FeaturesSection() {
   ]
 
   return (
-    <section id="features" className="py-24 bg-background">
+  <section id="features" className="pt-16 pb-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-14">
+          <Button
+            onClick={scrollToGoals}
+            size="lg"
+            className="mb-6 inline-flex items-center gap-2 px-8 py-6 text-base md:text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow transition-all group"
+          >
+            Know us before getting started
+            <ArrowDown className="h-5 w-5 transition-transform duration-300 group-hover:translate-y-1" />
+          </Button>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Core Features</h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Powerful AI tools designed to transform citizen feedback into actionable insights
           </p>
         </div>

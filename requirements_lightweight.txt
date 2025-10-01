@@ -1,0 +1,35 @@
+# Lightweight requirements for 512MB deployment
+# Total estimated size: ~150MB including dependencies
+
+# Core FastAPI
+fastapi==0.104.1
+uvicorn==0.23.2
+pydantic==2.4.2
+python-multipart==0.0.6
+
+# Lightweight ML libraries
+nltk==3.8.1              # ~50MB (VADER, tokenization)
+textblob==0.17.1         # ~10MB (simple sentiment)
+scikit-learn==1.3.0      # ~40MB (TF-IDF, LogisticRegression)
+
+# Essential data processing
+numpy==1.24.3            # ~20MB (required by scikit-learn)
+pandas==2.0.3            # ~30MB (data manipulation)
+
+# Utilities
+python-dotenv==1.0.0     # ~1MB (environment variables)
+requests==2.31.0         # ~1MB (HTTP requests)
+
+# Optional - only if needed
+# wordcloud==1.9.2       # ~5MB (for word cloud generation)
+# langdetect==1.0.9      # ~1MB (language detection)
+
+# Development & Testing (optional)
+# pytest==7.4.2
+# black==23.9.1
+
+# REMOVED HEAVY DEPENDENCIES:
+# torch==2.1.0           # ~2GB+ 
+# transformers==4.35.0   # ~500MB+
+# datasets==2.14.0       # ~100MB+
+# spacy==3.7.2          # ~200MB+

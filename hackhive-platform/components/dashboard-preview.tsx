@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -6,19 +7,41 @@ import Link from "next/link"
 
 export function DashboardPreview() {
   return (
-    <section className="py-24 bg-background">
+  <section id="interactive-dashboard" className="py-24 bg-background relative z-[60] isolate debug-dashboard-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Interactive Dashboard</h2>
           <p className="text-xl text-muted-foreground mb-8">
             Upload comments, visualize trends, and explore AI-powered insights.
           </p>
-          <Link href="/dashboard">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6">
-              Start Analysis Now
-              <Upload className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="relative inline-block">
+              <Button
+                asChild
+                size="lg"
+                className="relative z-[70] bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 pointer-events-auto cursor-pointer shadow-lg"
+              >
+                <Link href="/dashboard" aria-label="Start Analysis Now" prefetch className="pointer-events-auto">
+                  <span className="inline-flex items-center">Start Analysis Now<Upload className="ml-2 h-5 w-5" /></span>
+                </Link>
+              </Button>
+            </div>
+            
+            <div className="text-muted-foreground text-sm font-medium">or</div>
+            
+            <div className="relative inline-block">
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="relative z-[70] text-lg px-8 py-6 border-2 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 pointer-events-auto cursor-pointer shadow-sm"
+              >
+                <Link href="/dashboard#demo" aria-label="Try Demo Analysis" prefetch className="pointer-events-auto">
+                  <span className="inline-flex items-center">Try Demo Analysis<Sparkles className="ml-2 h-5 w-5" /></span>
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 mt-16">

@@ -1,0 +1,22 @@
+# Render.com deployment configuration
+# This uses the lightweight API optimized for 512MB instances
+
+services:
+  - type: web
+    name: econs-analysis-api-lightweight
+    env: python
+    buildCommand: |
+      pip install -r requirements_lightweight.txt &&
+      python -c "import nltk; nltk.download('vader_lexicon', quiet=True); nltk.download('punkt', quiet=True); nltk.download('stopwords', quiet=True)" &&
+      python -c "import textblob; textblob.download_corpora.download_lite()"
+    startCommand: python api/production_main.py
+    plan: starter  # 512MB plan
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: MEMORY_LIMIT_MB
+        value: 512
+      - key: PORT
+        sync: false
+    autoDeploy: true
+    healthCheckPath: /health

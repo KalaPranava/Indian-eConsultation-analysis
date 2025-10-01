@@ -1,0 +1,7 @@
+INFO:__main__:\U0001f30d Environment: production
+INFO:__main__:\U0001f4be Memory limit: 1024MB
+INFO:__main__:\U0001f9e9 Model profile (requested): auto
+INFO:__main__:\u26a1 Using lightweight models: False
+INFO:__main__:\U0001f680 Loading FULL model stack (XLM-R / DistilBERT / Emotion)...
+INFO:scripts.working_ml_api:\U0001f504 Loading ML models...
+^C

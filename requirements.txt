@@ -1,5 +1,8 @@
 torch==2.1.0
 transformers==4.35.0
+# transformers 4.35.0 expects tokenizers >=0.14,<0.15
+tokenizers==0.14.1
+huggingface_hub==0.19.4  # Pin older hub version compatible with datasets 2.14.0 (insecure_hashlib still present)
 datasets==2.14.0
 numpy==1.24.3
 pandas==2.0.3

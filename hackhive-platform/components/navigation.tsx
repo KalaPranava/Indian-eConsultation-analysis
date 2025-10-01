@@ -27,6 +27,9 @@ export function Navigation() {
               <Link href="/dashboard" className="text-foreground hover:text-primary transition-colors">
                 Dashboard
               </Link>
+              <Link href="#operational-advantages" className="text-foreground hover:text-primary transition-colors">
+                Advantages
+              </Link>
               <Link href="#contact" className="text-foreground hover:text-primary transition-colors">
                 Contact
               </Link>
@@ -59,6 +62,13 @@ export function Navigation() {
               onClick={() => setIsOpen(false)}
             >
               Dashboard
+            </Link>
+            <Link
+              href="#operational-advantages"
+              className="block px-3 py-2 text-foreground hover:text-primary transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              Advantages
             </Link>
             <Link
               href="#contact"

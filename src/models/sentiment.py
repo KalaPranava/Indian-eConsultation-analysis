@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from transformers import (
     AutoTokenizer, AutoModelForSequenceClassification,
-    TrainingArguments, Trainer, pipeline
+    pipeline
 )
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
 import pandas as pd
@@ -409,7 +409,15 @@ class SentimentTrainer:
             train_texts, train_labels, val_texts, val_labels
         )
         
-        # Training arguments
+        # Import training components lazily to avoid pulling heavy dependencies
+        try:
+            from transformers import TrainingArguments, Trainer  # type: ignore
+        except Exception as e:
+            raise RuntimeError(
+                "Training dependencies not available (datasets/huggingface_hub mismatch). "
+                "Install full training stack or skip training. Original error: " + str(e)
+            )
+
         training_args = TrainingArguments(
             output_dir=output_dir,
             num_train_epochs=num_train_epochs,

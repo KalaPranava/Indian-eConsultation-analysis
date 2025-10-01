@@ -286,9 +286,27 @@ summaries = summarizer.generate_summary(processed_data)
 ```
 
 ### 4. Run API Server
+
+**Choose the appropriate version based on your deployment environment:**
+
 ```bash
-python scripts/serve_api.py
+# 🪶 Lightweight version (512MB RAM, deployment-optimized)
+./start_lightweight_api.bat
+
+# 🚀 Full ML version (1GB+ RAM, maximum accuracy)
+./start_api.bat
+
+# ⚡ Production version (auto-detects environment)
+python api/production_main.py
 ```
+
+**Memory Usage Comparison:**
+- **Lightweight**: ~150MB (VADER, TextBlob, Custom Lexicons)
+- **Full ML**: ~800-1200MB (DistilBERT, XLM-RoBERTa, Transformers)
+
+**Deployment Options:**
+- **Render 512MB Plan**: Use lightweight version (`MEMORY_LIMIT_MB=512`)
+- **Render 1GB+ Plan**: Use full ML version for best accuracy
 
 ## Training Custom Models
 
@@ -320,15 +338,39 @@ response = requests.post(
 )
 ```
 
-## Docker Deployment
+## 🌐 Production Deployment
+
+### Option 1: Render.com + Vercel (Recommended for 512MB)
+
+**Backend (Render.com - Lightweight):**
+1. Connect your GitHub repository to Render
+2. Use `render.yaml` configuration (pre-configured for 512MB)
+3. Set environment variables:
+   - `ENVIRONMENT=production`
+   - `MEMORY_LIMIT_MB=512`
+4. Deploy with 512MB Starter plan ($7/month)
+
+**Frontend (Vercel):**
+1. Connect repository to Vercel
+2. Set `API_BASE_URL` to your Render URL
+3. Deploy automatically
+
+### Option 2: Docker Deployment
 
 ```bash
-# Build the image
+# Build lightweight version
 docker build -f docker/Dockerfile -t econsultation-analyzer .
 
 # Run with docker-compose
 docker-compose -f docker/docker-compose.yml up
 ```
+
+### Memory Optimization Features
+
+- **Automatic Model Selection**: Switches to lightweight models in production
+- **Environment Detection**: Uses `MEMORY_LIMIT_MB` to choose appropriate models
+- **512MB Compatibility**: Lightweight version fits comfortably in 512MB instances
+- **Graceful Fallbacks**: Falls back to simpler models if heavy models fail to load
 
 ## Configuration
 

@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Upload, FileText, AlertCircle } from "lucide-react"
@@ -12,6 +12,7 @@ export function FileUpload() {
   const [dragActive, setDragActive] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string>("")
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -44,11 +45,19 @@ export function FileUpload() {
   }
 
   const validateAndSetFile = (file: File) => {
-    const allowedTypes = ["text/csv", "application/json", "text/plain"]
     const maxSize = 10 * 1024 * 1024 // 10MB
 
-    if (!allowedTypes.includes(file.type)) {
-      setError("Please upload a structured data file (CSV, JSON, or TXT)")
+    // Some browsers / OSes report CSV as application/vnd.ms-excel or empty string
+    const mime = file.type
+    const nameLower = file.name.toLowerCase()
+    const ext = nameLower.split('.').pop() || ''
+
+    const isCSV = mime === 'text/csv' || mime === 'application/vnd.ms-excel' || ext === 'csv'
+    const isJSON = mime === 'application/json' || ext === 'json'
+    const isTXT = mime === 'text/plain' || ext === 'txt'
+
+    if (!(isCSV || isJSON || isTXT)) {
+      setError(`Unsupported file type: ${mime || '(none)'} — please upload CSV, JSON, or TXT`)
       return
     }
 
@@ -84,7 +93,7 @@ export function FileUpload() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-2xl mx-auto relative z-[55]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Upload className="h-5 w-5" />
@@ -96,7 +105,7 @@ export function FileUpload() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div
-          className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+          className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors z-[60] ${
             dragActive ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
           }`}
           onDragEnter={handleDrag}
@@ -105,10 +114,12 @@ export function FileUpload() {
           onDrop={handleDrop}
         >
           <input
+            ref={inputRef}
             type="file"
             accept=".csv,.json,.txt"
             onChange={handleChange}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-[70]"
+            aria-label="Select data file for analysis"
           />
 
           <div className="space-y-4">
@@ -141,6 +152,26 @@ export function FileUpload() {
             </div>
             <Button onClick={handleUpload} className="bg-primary hover:bg-primary/90">
               Upload & Analyze
+            </Button>
+          </div>
+        )}
+
+        {!file && (
+          <div className="flex justify-center">
+            <Button
+              variant="secondary"
+              onClick={(e) => {
+                e.preventDefault()
+                console.log('Browse button clicked - triggering file input')
+                if (inputRef.current) {
+                  inputRef.current.click()
+                } else {
+                  console.error('inputRef is null')
+                }
+              }}
+              className="mt-2"
+            >
+              Browse File
             </Button>
           </div>
         )}

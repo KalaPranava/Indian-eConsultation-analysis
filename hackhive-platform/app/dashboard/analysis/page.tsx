@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Navigation } from "@/components/navigation"
 import { AnalysisDashboard } from "@/components/analysis-dashboard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -36,8 +35,7 @@ export default function AnalysisPage() {
   if (isLoading) {
     return (
       <main className="min-h-screen bg-background">
-        <Navigation />
-        <div className="pt-24 flex items-center justify-center">
+        <div className="flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-muted-foreground">Loading analysis...</p>
@@ -50,8 +48,7 @@ export default function AnalysisPage() {
   if (!fileData) {
     return (
       <main className="min-h-screen bg-background">
-        <Navigation />
-        <div className="pt-24 pb-16">
+        <div className="pb-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <Card>
               <CardHeader>
@@ -77,9 +74,7 @@ export default function AnalysisPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <Navigation />
-      
-      <div className="pt-20 pb-8">
+      <div className="pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-8">

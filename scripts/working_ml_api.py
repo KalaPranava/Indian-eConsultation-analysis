@@ -31,19 +31,31 @@ def load_ml_models():
         # Import and load transformers models
         from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
         import torch
+        import os
         
-        # Load multilingual sentiment model
-        try:
-            ML_MODELS['sentiment_tokenizer'] = AutoTokenizer.from_pretrained("cardiffnlp/twitter-xlm-roberta-base-sentiment")
-            ML_MODELS['sentiment_model'] = AutoModelForSequenceClassification.from_pretrained("cardiffnlp/twitter-xlm-roberta-base-sentiment")
-            logger.info("✅ Sentiment model loaded")
-        except Exception as e:
-            logger.warning(f"Sentiment model failed, trying simpler approach: {e}")
+        # Load sentiment model - prioritize efficiency for cloud deployment
+        deployment_mode = os.getenv('DEPLOYMENT_MODE', 'local')  # 'local' or 'cloud'
+        
+        if deployment_mode == 'cloud':
+            # Use lightweight DistilBERT for cloud deployment (faster, less memory)
             try:
                 ML_MODELS['sentiment_pipeline'] = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
-                logger.info("✅ DistilBERT sentiment loaded")
-            except Exception as e2:
-                logger.warning(f"Backup sentiment model failed: {e2}")
+                logger.info("✅ DistilBERT sentiment loaded (Cloud optimized)")
+            except Exception as e:
+                logger.warning(f"DistilBERT sentiment failed: {e}")
+        else:
+            # Use heavy XLM-RoBERTa for local deployment (better accuracy)
+            try:
+                ML_MODELS['sentiment_tokenizer'] = AutoTokenizer.from_pretrained("cardiffnlp/twitter-xlm-roberta-base-sentiment")
+                ML_MODELS['sentiment_model'] = AutoModelForSequenceClassification.from_pretrained("cardiffnlp/twitter-xlm-roberta-base-sentiment")
+                logger.info("✅ XLM-RoBERTa sentiment loaded (Local mode)")
+            except Exception as e:
+                logger.warning(f"XLM-RoBERTa failed, falling back to DistilBERT: {e}")
+                try:
+                    ML_MODELS['sentiment_pipeline'] = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
+                    logger.info("✅ DistilBERT sentiment loaded (Fallback)")
+                except Exception as e2:
+                    logger.warning(f"Backup sentiment model failed: {e2}")
         
         # Load emotion classification
         try:
@@ -71,6 +83,20 @@ def load_ml_models():
             logger.info("✅ TF-IDF vectorizer loaded")
         except Exception as e:
             logger.warning(f"TF-IDF failed: {e}")
+
+        # Optionally load an abstractive summarization model (controlled by env to save memory)
+        # Skip heavy summarizer in cloud mode for better performance
+        if os.getenv('ENABLE_ABSTRACTIVE_SUMMARY', '0') in ['1', 'true', 'yes'] and deployment_mode != 'cloud':
+            try:
+                from transformers import pipeline as hf_pipeline
+                # Prefer a smaller distilbart model for memory efficiency; allow override
+                summarizer_model = os.getenv('SUMMARY_MODEL_NAME', 'sshleifer/distilbart-cnn-12-6')
+                ML_MODELS['abstractive_summarizer'] = hf_pipeline(
+                    'summarization', model=summarizer_model
+                )
+                logger.info(f"✅ Abstractive summarizer loaded: {summarizer_model}")
+            except Exception as e:
+                logger.warning(f"Abstractive summarizer load failed: {e}")
         
         MODEL_STATUS["loaded"] = len(ML_MODELS) > 0
         logger.info(f"🚀 ML models loaded: {list(ML_MODELS.keys())}")
@@ -166,6 +192,11 @@ class OverallSummaryResponse(BaseModel):
     key_insights: Dict[str, Any]
     methods_used: List[str]
     processing_time: float
+    abstractive_summary: Optional[str] = None
+    summarization_method: Optional[str] = None
+    chunk_count: Optional[int] = None
+    source_comment_count: Optional[int] = None
+    summary_passes: Optional[int] = None
 
 class WordcloudRequest(BaseModel):
     texts: List[str]
@@ -560,6 +591,113 @@ def summarize_text_ml(text: str, max_sentences: int = 1) -> Dict[str, Any]:
         'processing_time': processing_time
     }
 
+def summarize_text_abstractive(text: str, max_length: int = 180, min_length: int = 40) -> Optional[str]:
+    """Run abstractive summarization if model available. Returns summary or None."""
+    if 'abstractive_summarizer' not in ML_MODELS:
+        return None
+    try:
+        summarizer = ML_MODELS['abstractive_summarizer']
+        
+        # Auto-adjust max_length based on input length to avoid warnings
+        input_length = len(text.split())  # Rough word count
+        if input_length < 100:  # Short text
+            max_length = min(max_length, max(40, input_length // 2))
+        
+        # Clamp lengths sensibly
+        max_length = max(30, min(max_length, 400))
+        min_length = max(10, min(min_length, max_length - 10))
+        
+        result = summarizer(text, max_length=max_length, min_length=min_length, do_sample=False)
+        if isinstance(result, list) and result:
+            return result[0].get('summary_text')
+    except Exception as e:
+        logger.warning(f"Abstractive summarization failed: {e}")
+    return None
+
+def multi_document_abstractive_summary(texts: List[str], target_sentences: int = 6) -> Dict[str, Any]:
+    """Hierarchical multi-document summarization.
+
+    Strategy:
+      1. Clean and filter very short comments.
+      2. Concatenate into chunks within token/char budget (approx character proxy for tokens).
+      3. Run abstractive summary per chunk.
+      4. If >1 chunk summaries, run a second-pass summary over concatenated chunk summaries.
+    Returns dict with final summary & metadata.
+    """
+    start = time.time()
+    if 'abstractive_summarizer' not in ML_MODELS:
+        return {
+            'summary': None,
+            'method': 'none',
+            'passes': 0,
+            'chunks': 0
+        }
+    # Basic cleaning & filtering
+    cleaned = []
+    for t in texts:
+        t = (t or '').strip()
+        if len(t) < 10:
+            continue
+        # Collapse whitespace
+        t = re.sub(r'\s+', ' ', t)
+        cleaned.append(t)
+    if not cleaned:
+        return {
+            'summary': None,
+            'method': 'none',
+            'passes': 0,
+            'chunks': 0
+        }
+    # Chunking (char-based heuristic). distilbart ~ 1024 tokens -> ~4000 chars safe window
+    MAX_CHARS = 3800
+    chunks: List[str] = []
+    current = []
+    total_chars = 0
+    for c in cleaned:
+        if sum(len(x) for x in current) + len(c) + 1 > MAX_CHARS and current:
+            chunks.append('\n'.join(current))
+            current = [c]
+        else:
+            current.append(c)
+    if current:
+        chunks.append('\n'.join(current))
+
+    chunk_summaries: List[str] = []
+    for ch in chunks:
+        # Adjust max_length proportional to size
+        words = ch.split()
+        approx_tokens = len(words)
+        # Scale summary length: smaller chunk -> shorter summary
+        max_len = 120 if approx_tokens > 350 else 80
+        min_len = 35 if approx_tokens > 350 else 20
+        s = summarize_text_abstractive(ch, max_length=max_len, min_length=min_len)
+        if s:
+            chunk_summaries.append(s.strip())
+    passes = 1
+    final_summary = None
+    if not chunk_summaries:
+        # Fallback: try summarizing first 3500 chars combined
+        combined = ('\n'.join(cleaned))[:3500]
+        final_summary = summarize_text_abstractive(combined, max_length=140, min_length=40)
+    else:
+        if len(chunk_summaries) == 1:
+            final_summary = chunk_summaries[0]
+        else:
+            # Second pass
+            passes = 2
+            joined = ' \n '.join(chunk_summaries)
+            final_summary = summarize_text_abstractive(joined, max_length=180, min_length=60) or joined
+
+    processing_time = time.time() - start
+    return {
+        'summary': final_summary,
+        'method': 'hierarchical_abstractive' if final_summary else 'abstractive_failed',
+        'passes': passes,
+        'chunks': len(chunks),
+        'chunk_summaries': chunk_summaries,
+        'processing_time': processing_time
+    }
+
 @app.get("/")
 async def root():
     model_info = list(ML_MODELS.keys()) if MODEL_STATUS["loaded"] else ["fallback_heuristics"]
@@ -718,6 +856,11 @@ async def overall_summary_endpoint(request: OverallSummaryRequest):
         f"{sentiment_distribution['negative']} negative, {sentiment_distribution['neutral']} neutral. "
         f"Dominant emotion: {key_insights['emotional_state']}. Satisfaction level: {key_insights['satisfaction_level']}."
     )
+    # Try enhanced multi-document abstractive summary (optional)
+    abstractive_meta = multi_document_abstractive_summary(request.texts, target_sentences=6)
+    abstractive_summary = abstractive_meta.get('summary')
+    if abstractive_summary:
+        methods_used.append(abstractive_meta.get('method', 'hierarchical_abstractive'))
     methods_used = list({s.get('method','') for s in sentiments} | {e.get('method','') for e in emotions})
     processing_time = time.time() - start
     return OverallSummaryResponse(
@@ -726,7 +869,12 @@ async def overall_summary_endpoint(request: OverallSummaryRequest):
         emotion_distribution=emotion_distribution,
         key_insights=key_insights,
         methods_used=[m for m in methods_used if m],
-        processing_time=processing_time
+        processing_time=processing_time + abstractive_meta.get('processing_time', 0.0),
+        abstractive_summary=abstractive_summary,
+        summarization_method=abstractive_meta.get('method'),
+        chunk_count=abstractive_meta.get('chunks'),
+        source_comment_count=total,
+        summary_passes=abstractive_meta.get('passes')
     )
 
 @app.post("/analyze/wordcloud", response_model=WordcloudResponse)
