@@ -1,19 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "cd hackhive-platform && npm install && npm run build",
-  "outputDirectory": "hackhive-platform/.next",
-  "installCommand": "cd hackhive-platform && npm install",
-  "framework": "nextjs",
   "builds": [
     {
       "src": "hackhive-platform/package.json",
       "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "hackhive-platform/$1"
     }
   ],
   "env": {
