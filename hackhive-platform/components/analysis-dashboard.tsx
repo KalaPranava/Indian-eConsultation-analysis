@@ -82,6 +82,13 @@ export function AnalysisDashboard({ fileData }: Props) {
   const [modelsUsed, setModelsUsed] = useState<{[key: string]: string}>({})
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000'
+  
+  // Mock mode - automatically enable for demo deployment
+  const MOCK_MODE = process.env.NEXT_PUBLIC_MOCK_MODE === 'true' || 
+    (!API_BASE_URL || API_BASE_URL === '' || 
+     (!API_BASE_URL.includes('localhost') && !API_BASE_URL.includes('127.0.0.1') && 
+      !API_BASE_URL.includes('render') && !API_BASE_URL.includes('oracle') && 
+      !API_BASE_URL.includes('http')))
 
   // Define active ML models for impressive loading display 
   const activeModels = {
@@ -146,9 +153,96 @@ export function AnalysisDashboard({ fileData }: Props) {
     return data
   }
 
+  const startMockAnalysis = async () => {
+    try {
+      setTotalBatches(4)
+      
+      // Simulate progressive loading with realistic delays
+      const stages = [
+        { progress: 25, batch: 1, delay: 1500 },
+        { progress: 50, batch: 2, delay: 2000 },
+        { progress: 75, batch: 3, delay: 1800 },
+        { progress: 100, batch: 4, delay: 1200 }
+      ]
+
+      for (const stage of stages) {
+        await new Promise(resolve => setTimeout(resolve, stage.delay))
+        setProgress(stage.progress)
+        setCurrentBatch(stage.batch)
+      }
+
+      // Load the sample analysis results
+      const response = await fetch('/sample-analysis-results.json')
+      const mockData = await response.json()
+      
+      // Set the analysis results
+      setAnalysisResults(mockData.results)
+      setStatistics(mockData.statistics)
+      setOverallSummary(mockData.overallSummary)
+      setModelsUsed(mockData.models_used)
+      
+      // Generate word cloud from mock data
+      generateWordCloudFromResults(mockData.results)
+      
+    } catch (error) {
+      console.error('Error loading mock data:', error)
+      // Set fallback data
+      setAnalysisResults([])
+      setStatistics({
+        total: 0,
+        sentimentCounts: { positive: 0, negative: 0, neutral: 0 },
+        emotionCounts: { joy: 0, anger: 0, neutral: 0 },
+        languageCounts: { English: 0 },
+        avgConfidence: 0
+      })
+      setOverallSummary(null)
+    } finally {
+      setIsAnalyzing(false)
+    }
+  }
+
+  const generateWordCloudFromResults = (results: AnalysisResult[]) => {
+    const stopWords = new Set([
+      'the', 'is', 'at', 'which', 'on', 'and', 'a', 'to', 'are', 'as', 'was', 'will', 'an', 'be', 'or', 'of', 'with', 
+      'by', 'from', 'up', 'about', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'between', 'among',
+      'i', 'you', 'he', 'she', 'it', 'we', 'they', 'them', 'their', 'this', 'that', 'these', 'those', 'my', 'your',
+      'his', 'her', 'its', 'our', 'very', 'can', 'had', 'has', 'have', 'do', 'does', 'did', 'but', 'if', 'for', 'in'
+    ])
+    
+    const wordCount: { [key: string]: number } = {}
+    
+    results.forEach(result => {
+      const words = result.originalText
+        .toLowerCase()
+        .replace(/[^\w\s\u0900-\u097F]/g, ' ')
+        .split(/\s+/)
+        .filter(word => word.length > 2 && !stopWords.has(word))
+      
+      words.forEach(word => {
+        wordCount[word] = (wordCount[word] || 0) + 1
+      })
+    })
+    
+    // Get top 30 words
+    const sortedWords = Object.entries(wordCount)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 30)
+      .reduce((obj, [word, count]) => {
+        obj[word] = count
+        return obj
+      }, {} as { [key: string]: number })
+    
+    setWordCloud(sortedWords)
+  }
+
   const startAnalysis = async () => {
     setIsAnalyzing(true)
     setProgress(0)
+
+    // Mock mode for demo deployment
+    if (MOCK_MODE) {
+      return await startMockAnalysis()
+    }
 
     try {
       // Parse the file content
@@ -577,6 +671,25 @@ export function AnalysisDashboard({ fileData }: Props) {
     <div className="flex gap-6 relative z-10">
       {/* Main Content */}
       <div className="flex-1 space-y-6">
+        {/* Demo Mode Banner */}
+        {MOCK_MODE && (
+          <Card className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-amber-200 dark:border-amber-800">
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-3">
+                <Sparkles className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                <div>
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                    Demo Mode Active
+                  </p>
+                  <p className="text-xs text-amber-700 dark:text-amber-300">
+                    Showing sample analysis results. Full AI backend will be available soon.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>

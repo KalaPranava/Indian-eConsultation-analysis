@@ -14,24 +14,23 @@ export function DemoAnalysis() {
     setIsLoading(true)
     
     try {
-      // Fetch the demo CSV file from the public directory
-      const response = await fetch('/policy_feedback.csv')
-      const csvText = await response.text()
-      
-      // Store the demo file data in localStorage
+      // For demo mode, create a mock file data object
       const demoFileData = {
         name: 'policy_feedback.csv',
-        content: csvText,
+        content: 'id,feedback\n1,"Service is helpful and saves time"\n2,"बहुत अच्छी सेवा है"\n3,"Booking system is confusing"\n4,"Good service overall"\n5,"Technical issues faced"\n6,"Highly recommended service"',
         type: 'text/csv',
-        size: csvText.length
+        size: 250
       }
       
       localStorage.setItem('analysisFile', JSON.stringify(demoFileData))
       
+      // Small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 800))
+      
       // Navigate to analysis page
       window.location.href = '/dashboard/analysis'
     } catch (error) {
-      console.error('Failed to load demo file:', error)
+      console.error('Failed to prepare demo:', error)
       setIsLoading(false)
     }
   }
