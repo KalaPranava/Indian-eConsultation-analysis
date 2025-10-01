@@ -724,9 +724,12 @@ export function AnalysisDashboard({ fileData }: Props) {
               <Heart className="h-5 w-5 text-red-500" />
               <div>
                 <p className="text-2xl font-bold">
-                  {Object.keys(statistics.emotionCounts).reduce((a, b) => 
-                    statistics.emotionCounts[a] > statistics.emotionCounts[b] ? a : b
-                  )}
+                  {(() => {
+                    const emotionCounts = statistics.emotionCounts as Record<string, number>
+                    return Object.keys(emotionCounts).reduce((a, b) => 
+                      emotionCounts[a] > emotionCounts[b] ? a : b
+                    )
+                  })()}
                 </p>
                 <p className="text-sm text-muted-foreground">Top Emotion</p>
               </div>
@@ -895,11 +898,19 @@ export function AnalysisDashboard({ fileData }: Props) {
                 <Card className="bg-gradient-to-br from-purple-50 to-violet-100 dark:from-purple-950 dark:to-violet-900 border-purple-200 dark:border-purple-800">
                   <CardContent className="p-6 text-center">
                     <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2 capitalize">
-                      {Object.entries(statistics.emotionCounts).reduce((a, b) => statistics.emotionCounts[a[0]] > statistics.emotionCounts[b[0]] ? a : b)[0]}
+                      {(() => {
+                        const entries = Object.entries(statistics.emotionCounts as Record<string, number>)
+                        const topEmotion = entries.reduce((a, b) => (a[1] as number) > (b[1] as number) ? a : b)
+                        return topEmotion[0]
+                      })()}
                     </div>
                     <div className="text-purple-700 dark:text-purple-300 font-medium">Dominant Emotion</div>
                     <div className="text-sm text-purple-600 dark:text-purple-400 mt-1">
-                      {Object.entries(statistics.emotionCounts).reduce((a, b) => statistics.emotionCounts[a[0]] > statistics.emotionCounts[b[0]] ? a : b)[1]} occurrences
+                      {(() => {
+                        const entries = Object.entries(statistics.emotionCounts as Record<string, number>)
+                        const topEmotion = entries.reduce((a, b) => (a[1] as number) > (b[1] as number) ? a : b)
+                        return topEmotion[1]
+                      })()} occurrences
                     </div>
                   </CardContent>
                 </Card>
@@ -1125,8 +1136,9 @@ export function AnalysisDashboard({ fileData }: Props) {
                     .sort(([,a], [,b]) => (b as number) - (a as number))
                     .slice(0, 6)
                     .map(([emotion, count], index) => {
-                      const maxCount = Math.max(...Object.values(statistics.emotionCounts))
-                      const height = ((count as number) / maxCount) * 200
+                      const emotionCount = count as number
+                      const maxCount = Math.max(...Object.values(statistics.emotionCounts as Record<string, number>))
+                      const height = (emotionCount / maxCount) * 200
                       const colors = ['#f59e0b', '#3b82f6', '#ef4444', '#8b5cf6', '#10b981', '#6b7280']
                       
                       return (
@@ -1142,7 +1154,7 @@ export function AnalysisDashboard({ fileData }: Props) {
                           <Badge variant="outline" className="text-xs whitespace-nowrap">
                             {emotion}
                           </Badge>
-                          <span className="text-xs font-medium">{count}</span>
+                          <span className="text-xs font-medium">{emotionCount}</span>
                         </div>
                       )
                     })}
@@ -1206,7 +1218,8 @@ export function AnalysisDashboard({ fileData }: Props) {
                   {Object.entries(statistics.languageCounts)
                     .sort(([,a], [,b]) => (b as number) - (a as number))
                     .map(([lang, count]) => {
-                      const percentage = ((count as number) / statistics.total) * 100
+                      const langCount = count as number
+                      const percentage = (langCount / statistics.total) * 100
                       const colors: { [key: string]: string } = {
                         'English': 'bg-blue-500',
                         'Hindi': 'bg-orange-500', 
@@ -1222,7 +1235,7 @@ export function AnalysisDashboard({ fileData }: Props) {
                               <div className={`w-3 h-3 rounded-full mr-2 ${colors[lang] || 'bg-gray-500'}`}></div>
                               {lang}
                             </span>
-                            <Badge variant="secondary">{count} ({percentage.toFixed(1)}%)</Badge>
+                            <Badge variant="secondary">{langCount} ({percentage.toFixed(1)}%)</Badge>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-1">
                             <div 
@@ -1448,7 +1461,8 @@ export function AnalysisDashboard({ fileData }: Props) {
               {Object.entries(statistics.emotionCounts)
                 .sort(([,a], [,b]) => (b as number) - (a as number))
                 .map(([emotion, count]) => {
-                  const percentage = ((count as number) / statistics.total) * 100
+                  const emotionCount = count as number
+                  const percentage = (emotionCount / statistics.total) * 100
                   const emotionConfig = {
                     joy: { icon: '😊', color: 'from-yellow-400 to-yellow-600', textColor: 'text-yellow-700' },
                     sadness: { icon: '😢', color: 'from-blue-400 to-blue-600', textColor: 'text-blue-700' },
@@ -1470,7 +1484,7 @@ export function AnalysisDashboard({ fileData }: Props) {
                             {emotion}
                           </div>
                           <div className="text-sm text-muted-foreground">
-                            {count} ({percentage.toFixed(1)}%)
+                            {emotionCount} ({percentage.toFixed(1)}%)
                           </div>
                         </div>
                       </CardContent>
@@ -1492,25 +1506,28 @@ export function AnalysisDashboard({ fileData }: Props) {
                   {Object.entries(statistics.emotionCounts)
                     .sort(([,a], [,b]) => (b as number) - (a as number))
                     .map(([emotion, count]) => {
-                      const percentage = ((count as number) / statistics.total) * 100
+                      const emotionCount = count as number
+                      const percentage = (emotionCount / statistics.total) * 100
                       const sampleComments = analysisResults
                         .filter(r => r.emotion.primary_emotion === emotion)
                         .slice(0, 3)
+
+                      const emotionEmojis: Record<string, string> = {
+                        joy: '😊', sadness: '😢', anger: '😠', fear: '😨',
+                        surprise: '😲', disgust: '🤢', neutral: '😐'
+                      }
 
                       return (
                         <div key={emotion} className="border rounded-lg p-4">
                           <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold capitalize flex items-center">
                               <span className="mr-2">
-                                {{
-                                  joy: '😊', sadness: '😢', anger: '😠', fear: '😨',
-                                  surprise: '😲', disgust: '🤢', neutral: '😐'
-                                }[emotion as keyof typeof statistics.emotionCounts] || '😐'}
+                                {emotionEmojis[emotion] || '😐'}
                               </span>
                               {emotion}
                             </h3>
                             <Badge variant="secondary" className="text-lg px-3 py-1">
-                              {count} ({percentage.toFixed(1)}%)
+                              {emotionCount} ({percentage.toFixed(1)}%)
                             </Badge>
                           </div>
                           
@@ -1535,10 +1552,10 @@ export function AnalysisDashboard({ fileData }: Props) {
                                       }
                                     </p>
                                     <div className="flex items-center mt-2 space-x-2">
-                                      <Badge variant="outline" size="sm">
+                                      <Badge variant="outline" className="text-xs">
                                         Confidence: {Math.round(comment.emotion.confidence * 100)}%
                                       </Badge>
-                                      <Badge variant="outline" size="sm">
+                                      <Badge variant="outline" className="text-xs">
                                         {comment.sentiment.label}
                                       </Badge>
                                     </div>
