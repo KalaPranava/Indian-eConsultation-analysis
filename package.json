@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "AI-powered analysis platform for Indian e-consultation feedback",
   "scripts": {
-    "build": "cd hackhive-platform && npm install && npm run build",
-    "start": "cd hackhive-platform && npm start",
-    "dev": "cd hackhive-platform && npm run dev"
+    "build": "cd insightgov-platform && npm install && npm run build",
+    "start": "cd insightgov-platform && npm start",
+    "dev": "cd insightgov-platform && npm run dev"
   },
   "repository": {
     "type": "git",

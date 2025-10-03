@@ -30,7 +30,7 @@ This is the frontend-only demo deployment for the SIH project submission.
 
 ## 🎯 Deployment Steps
 1. Clone repository
-2. Navigate to `hackhive-platform` folder
+2. Navigate to `insightgov-platform` folder
 3. Deploy to Vercel (auto-detected as Next.js)
 4. Set environment variable: `NEXT_PUBLIC_MOCK_MODE=true`
 

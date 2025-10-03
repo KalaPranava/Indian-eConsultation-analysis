@@ -46,7 +46,7 @@ if ENVIRONMENT == "production":
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[
-            "https://hackhive-platform.vercel.app",
+            "https://insightgov-platform.vercel.app",
             "https://*.vercel.app",
             "https://your-frontend-domain.com"  # Replace with your actual domain
         ],

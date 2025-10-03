@@ -12,13 +12,13 @@ venv.bak/
 .env
 fresh_env/
 
-# Node.js (for HackHive platform)
-hackhive-platform/node_modules/
-hackhive-platform/.next/
-hackhive-platform/.env.local
-hackhive-platform/.env.development.local
-hackhive-platform/.env.production.local
-hackhive-platform/out/
+# Node.js (for InsightGov platform)
+insightgov-platform/node_modules/
+insightgov-platform/.next/
+insightgov-platform/.env.local
+insightgov-platform/.env.development.local
+insightgov-platform/.env.production.local
+insightgov-platform/out/
 
 # Model cache and ML artifacts
 *.pkl

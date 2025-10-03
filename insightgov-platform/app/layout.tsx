@@ -9,7 +9,7 @@ import Link from "next/link"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "HackHive - Turning Voices into Action",
+  title: "InsightGov - Turning Voices into Action",
   description: "AI-powered sentiment analysis platform for citizen feedback and policy insights",
   generator: "v0.app",
 }
@@ -25,7 +25,7 @@ export default function RootLayout({
         {/* Brand logo (restored) */}
   <div className="fixed top-[43.5px] left-8 z-50">
           <Link href="/" className="text-2xl font-bold tracking-tight text-primary drop-shadow-sm hover:opacity-90 transition-opacity">
-            HackHive
+            InsightGov
           </Link>
         </div>
         <TubelightNavBar />

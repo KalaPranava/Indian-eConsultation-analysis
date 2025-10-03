@@ -17,7 +17,7 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <div className="space-y-8">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-balance">
-            <SplitText text="HackHive:" className="text-primary" />{" "}
+            <SplitText text="InsightGov:" className="text-primary" />{" "}
             <SplitText text="Turning Voices into Action" className="text-foreground" delay={400} />
           </h1>
 

@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "hackhive-platform/package.json",
+      "src": "insightgov-platform/package.json",
       "use": "@vercel/next"
     }
   ],

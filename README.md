@@ -19,7 +19,7 @@ AI-powered sentiment analysis and emotion detection platform for Indian e-consul
 
 ## 🏗️ Architecture
 
-### Frontend (HackHive Platform)
+### Frontend (InsightGov Platform)
 - **Framework**: Next.js 14 with TypeScript
 - **Styling**: Tailwind CSS v4 with Shadcn/ui components
 - **State Management**: React hooks
@@ -70,7 +70,7 @@ uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
 ### Frontend Setup
 ```bash
 # Navigate to frontend directory
-cd hackhive-platform
+cd insightgov-platform
 
 # Install dependencies
 npm install
@@ -87,7 +87,7 @@ Access the application at `http://localhost:3000`
 ├── api/                    # FastAPI backend
 │   ├── main.py            # Main API application
 │   └── schemas.py         # Pydantic models
-├── hackhive-platform/     # Next.js frontend
+├── insightgov-platform/     # Next.js frontend
 │   ├── components/        # React components
 │   ├── app/              # Next.js 14 app directory
 │   └── lib/              # Utility functions
