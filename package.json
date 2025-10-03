@@ -5,7 +5,8 @@
   "scripts": {
     "build": "cd insightgov-platform && npm install && npm run build",
     "start": "cd insightgov-platform && npm start",
-    "dev": "cd insightgov-platform && npm run dev"
+    "dev": "cd insightgov-platform && npm run dev",
+    "vercel-build": "cd insightgov-platform && npm install && npm run build"
   },
   "repository": {
     "type": "git",

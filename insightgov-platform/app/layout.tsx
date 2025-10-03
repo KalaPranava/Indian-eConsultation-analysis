@@ -10,7 +10,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "InsightGov - Turning Voices into Action",
-  description: "AI-powered sentiment analysis platform for citizen feedback and policy insights",
+  description: "AI-powered sentiment analysis platform for citizen feedback and policy insights - Demo Mode",
   generator: "v0.app",
 }
 

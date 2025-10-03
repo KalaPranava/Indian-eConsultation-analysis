@@ -1,4 +1,4 @@
-# HackHive Platform - ML Integration Complete! 🎉
+# InsightGov Platform - ML Integration Complete! 🎉
 
 ## 🚀 **Integration Overview**
 
