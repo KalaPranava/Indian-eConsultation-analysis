@@ -13,11 +13,17 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <FileUpload />
+          {/* Side-by-side layout for desktop, stacked for mobile */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* File Upload Section */}
+            <div className="w-full">
+              <FileUpload />
+            </div>
 
-          {/* Demo Analysis Section */}
-          <div id="demo" className="mt-16">
-            <DemoAnalysis />
+            {/* Demo Analysis Section */}
+            <div className="w-full">
+              <DemoAnalysis />
+            </div>
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { mockAnalysisData } from "@/lib/mockData"
 import { 
   BarChart3, 
   PieChart, 
@@ -80,15 +81,13 @@ export function AnalysisDashboard({ fileData }: Props) {
   const [selectedWords, setSelectedWords] = useState<string[]>([])
   const [filteredComments, setFilteredComments] = useState<AnalysisResult[]>([])
   const [modelsUsed, setModelsUsed] = useState<{[key: string]: string}>({})
+  const [activeTab, setActiveTab] = useState("summary")
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000'
   
-  // Mock mode - automatically enable for demo deployment
-  const MOCK_MODE = process.env.NEXT_PUBLIC_MOCK_MODE === 'true' || 
-    (!API_BASE_URL || API_BASE_URL === '' || 
-     (!API_BASE_URL.includes('localhost') && !API_BASE_URL.includes('127.0.0.1') && 
-      !API_BASE_URL.includes('render') && !API_BASE_URL.includes('oracle') && 
-      !API_BASE_URL.includes('http')))
+  // Mock mode - ALWAYS enabled for demo (no real API connection)
+  // This ensures the demo works without requiring a backend server
+  const MOCK_MODE = true  // Force mock mode for demo deployment
 
   // Define active ML models for impressive loading display 
   const activeModels = {
@@ -171,9 +170,24 @@ export function AnalysisDashboard({ fileData }: Props) {
         setCurrentBatch(stage.batch)
       }
 
-      // Load the sample analysis results
-      const response = await fetch('/sample-analysis-results.json')
-      const mockData = await response.json()
+      // Try to load from JSON first, fallback to embedded data
+      let mockData = mockAnalysisData // Use embedded data as default
+      
+      try {
+        console.log('Attempting to load mock data from /sample-analysis-results.json...')
+        const response = await fetch('/sample-analysis-results.json')
+        
+        if (response.ok) {
+          mockData = await response.json()
+          console.log('Mock data loaded from JSON file successfully:', mockData)
+        } else {
+          console.warn('Could not load JSON file, using embedded mock data instead')
+        }
+      } catch (fetchError) {
+        console.warn('Fetch failed, using embedded mock data:', fetchError)
+      }
+      
+      console.log('Using mock data:', mockData)
       
       // Set the analysis results
       setAnalysisResults(mockData.results)
@@ -181,11 +195,14 @@ export function AnalysisDashboard({ fileData }: Props) {
       setOverallSummary(mockData.overallSummary)
       setModelsUsed(mockData.models_used)
       
+      console.log('Statistics set:', mockData.statistics)
+      console.log('Results count:', mockData.results.length)
+      
       // Generate word cloud from mock data
       generateWordCloudFromResults(mockData.results)
       
     } catch (error) {
-      console.error('Error loading mock data:', error)
+      console.error('Critical error in mock analysis:', error)
       // Set fallback data
       setAnalysisResults([])
       setStatistics({
@@ -240,10 +257,13 @@ export function AnalysisDashboard({ fileData }: Props) {
     setProgress(0)
 
     // Mock mode for demo deployment
+    console.log('🎭 MOCK_MODE:', MOCK_MODE)
     if (MOCK_MODE) {
+      console.log('✅ Using mock analysis with sample data')
       return await startMockAnalysis()
     }
 
+    console.log('⚠️ Using real API analysis')
     try {
       // Parse the file content
       let texts: string[] = []
@@ -833,15 +853,53 @@ export function AnalysisDashboard({ fileData }: Props) {
       )}
 
       {/* Detailed Results */}
-      <Tabs defaultValue="summary" className="space-y-4 relative z-20">
-        <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 gap-1 h-auto p-1 relative z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 border shadow-sm">
-          <TabsTrigger value="summary" className="text-xs sm:text-sm px-2 py-2 data-[state=active]:z-40">Summary</TabsTrigger>
-          <TabsTrigger value="wordcloud" className="text-xs sm:text-sm px-2 py-2 data-[state=active]:z-40">Word Cloud</TabsTrigger>
-          <TabsTrigger value="insights" className="text-xs sm:text-sm px-2 py-2 data-[state=active]:z-40">Data Insights</TabsTrigger>
-          <TabsTrigger value="comments" className="text-xs sm:text-sm px-2 py-2 data-[state=active]:z-40">Comments</TabsTrigger>
-          <TabsTrigger value="emotions" className="text-xs sm:text-sm px-2 py-2 data-[state=active]:z-40">Emotions</TabsTrigger>
-          <TabsTrigger value="export" className="text-xs sm:text-sm px-2 py-2 data-[state=active]:z-40">Export</TabsTrigger>
-        </TabsList>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 relative z-20">
+        <div className="sticky top-20 z-30 bg-background/95 backdrop-blur-xl pb-4 -mx-4 px-4">
+          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 gap-1 h-auto p-1 relative bg-muted/50 backdrop-blur supports-[backdrop-filter]:bg-muted/30 border-2 shadow-lg rounded-xl">
+            <TabsTrigger 
+              value="summary" 
+              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+            >
+              <FileText className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Summary</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="wordcloud" 
+              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+            >
+              <Cloud className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Word Cloud</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="insights" 
+              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+            >
+              <Brain className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Data Insights</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="comments" 
+              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+            >
+              <MessageSquare className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Comments</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="emotions" 
+              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+            >
+              <Heart className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Emotions</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="export" 
+              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+            >
+              <Download className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Export</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="summary" className="space-y-6 relative z-10 mt-4">
           {overallSummary && (

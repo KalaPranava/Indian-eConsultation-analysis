@@ -37,15 +37,8 @@ export function DemoAnalysis() {
 
   return (
     <div className="space-y-6">
-      {/* Divider */}
-      <div className="flex items-center justify-center">
-        <div className="flex-1 border-t border-border"></div>
-        <div className="px-4 text-sm text-muted-foreground font-medium">OR</div>
-        <div className="flex-1 border-t border-border"></div>
-      </div>
-
       {/* Demo Analysis Card */}
-      <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-900 border-blue-200 dark:border-blue-800 relative z-[55]">
+      <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-900 border-blue-200 dark:border-blue-800 relative z-[55] h-full">
         <CardHeader className="text-center">
           <div className="mx-auto w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mb-4">
             <Sparkles className="h-8 w-8 text-blue-600 dark:text-blue-400" />
