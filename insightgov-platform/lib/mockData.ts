@@ -13,7 +13,7 @@ export const mockAnalysisData = {
       "emotion": {
         "primary_emotion": "joy",
         "confidence": 0.85,
-        "emotion_scores": { "joy": 0.85, "trust": 0.12, "neutral": 0.03 },
+        "emotion_scores": { "joy": 0.85, "trust": 0.12, "neutral": 0.03, "anger": 0.0, "sadness": 0.0 },
         "method": "DistilRoBERTa"
       },
       "summary": "User appreciates the helpful and time-saving e-consultation service with easy interface.",
@@ -32,7 +32,7 @@ export const mockAnalysisData = {
       "emotion": {
         "primary_emotion": "joy",
         "confidence": 0.82,
-        "emotion_scores": { "joy": 0.82, "trust": 0.15, "neutral": 0.03 },
+        "emotion_scores": { "joy": 0.82, "trust": 0.15, "neutral": 0.03, "anger": 0.0, "sadness": 0.0 },
         "method": "DistilRoBERTa"
       },
       "summary": "User finds the service very good and appreciates easy communication with doctors.",
@@ -51,7 +51,7 @@ export const mockAnalysisData = {
       "emotion": {
         "primary_emotion": "anger",
         "confidence": 0.78,
-        "emotion_scores": { "anger": 0.78, "sadness": 0.15, "neutral": 0.07 },
+        "emotion_scores": { "anger": 0.78, "sadness": 0.15, "neutral": 0.07, "joy": 0.0, "trust": 0.0 },
         "method": "DistilRoBERTa"
       },
       "summary": "User frustrated with confusing booking system and slow response times.",
@@ -70,7 +70,7 @@ export const mockAnalysisData = {
       "emotion": {
         "primary_emotion": "neutral",
         "confidence": 0.68,
-        "emotion_scores": { "neutral": 0.68, "sadness": 0.22, "joy": 0.10 },
+        "emotion_scores": { "neutral": 0.68, "sadness": 0.22, "joy": 0.10, "anger": 0.0, "trust": 0.0 },
         "method": "DistilRoBERTa"
       },
       "summary": "User satisfied with system functionality but suggests video quality improvements.",
@@ -89,7 +89,7 @@ export const mockAnalysisData = {
       "emotion": {
         "primary_emotion": "neutral",
         "confidence": 0.65,
-        "emotion_scores": { "neutral": 0.65, "sadness": 0.25, "joy": 0.10 },
+        "emotion_scores": { "neutral": 0.65, "sadness": 0.25, "joy": 0.10, "anger": 0.0, "trust": 0.0 },
         "method": "DistilRoBERTa"
       },
       "summary": "User appreciated doctor's behavior but faced technical issues.",
@@ -108,7 +108,7 @@ export const mockAnalysisData = {
       "emotion": {
         "primary_emotion": "joy",
         "confidence": 0.91,
-        "emotion_scores": { "joy": 0.91, "trust": 0.08, "neutral": 0.01 },
+        "emotion_scores": { "joy": 0.91, "trust": 0.08, "neutral": 0.01, "anger": 0.0, "sadness": 0.0 },
         "method": "DistilRoBERTa"
       },
       "summary": "User highly recommends the service praising quick response and professional doctors.",
