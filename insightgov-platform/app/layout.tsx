@@ -22,14 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
-        {/* Brand logo (restored) */}
-  <div className="fixed top-[43.5px] left-8 z-50">
-          <Link href="/" className="text-2xl font-bold tracking-tight text-primary drop-shadow-sm hover:opacity-90 transition-opacity">
+        {/* Brand logo (restored) - responsive sizing */}
+  <div className="fixed top-[38px] sm:top-[43.5px] left-3 sm:left-6 md:left-8 z-50">
+          <Link href="/" className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-primary drop-shadow-sm hover:opacity-90 transition-opacity">
             InsightGov
           </Link>
         </div>
         <TubelightNavBar />
-  <div className="pt-[130px] pb-24">{/* reduced top padding to tighten space before sections */}
+  <div className="pt-[100px] sm:pt-[120px] md:pt-[130px] pb-12 sm:pb-16 md:pb-24">{/* responsive padding for all screen sizes */}
           <Suspense fallback={null}>{children}</Suspense>
         </div>
         <Analytics />

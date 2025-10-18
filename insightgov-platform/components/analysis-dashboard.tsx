@@ -688,17 +688,17 @@ export function AnalysisDashboard({ fileData }: Props) {
   }
 
   return (
-    <div className="flex gap-6 relative z-10">
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 relative z-10 px-2 sm:px-4">
       {/* Main Content */}
-      <div className="flex-1 space-y-6">
+      <div className="flex-1 space-y-4 lg:space-y-6 min-w-0">
         {/* Demo Mode Banner */}
         {MOCK_MODE && (
           <Card className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-amber-200 dark:border-amber-800">
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-3">
-                <Sparkles className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                <div>
-                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-start sm:items-center space-x-2 sm:space-x-3">
+                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5 sm:mt-0" />
+                <div className="min-w-0">
+                  <p className="text-xs sm:text-sm font-medium text-amber-800 dark:text-amber-200">
                     Demo Mode Active
                   </p>
                   <p className="text-xs text-amber-700 dark:text-amber-300">
@@ -711,39 +711,39 @@ export function AnalysisDashboard({ fileData }: Props) {
         )}
         
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-2">
-                <MessageSquare className="h-5 w-5 text-primary" />
-                <div>
-                  <p className="text-2xl font-bold">{statistics.total}</p>
-                  <p className="text-sm text-muted-foreground">Total Comments</p>
+            <CardContent className="p-3 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center sm:space-x-2">
+                <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-primary mb-1 sm:mb-0" />
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-bold truncate">{statistics.total}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Total</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="h-5 w-5 text-green-500" />
-              <div>
-                <p className="text-2xl font-bold text-green-600">
+          <CardContent className="p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center sm:space-x-2">
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-green-500 mb-1 sm:mb-0" />
+              <div className="min-w-0">
+                <p className="text-lg sm:text-2xl font-bold text-green-600 truncate">
                   {Math.round((statistics.sentimentCounts.positive / statistics.total) * 100)}%
                 </p>
-                <p className="text-sm text-muted-foreground">Positive</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Positive</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <Heart className="h-5 w-5 text-red-500" />
-              <div>
-                <p className="text-2xl font-bold">
+          <CardContent className="p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center sm:space-x-2">
+              <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 mb-1 sm:mb-0" />
+              <div className="min-w-0">
+                <p className="text-lg sm:text-2xl font-bold truncate capitalize">
                   {(() => {
                     const emotionCounts = statistics.emotionCounts as Record<string, number>
                     return Object.keys(emotionCounts).reduce((a, b) => 
@@ -751,21 +751,21 @@ export function AnalysisDashboard({ fileData }: Props) {
                     )
                   })()}
                 </p>
-                <p className="text-sm text-muted-foreground">Top Emotion</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Top Emotion</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="h-5 w-5 text-blue-500" />
-              <div>
-                <p className="text-2xl font-bold">
+          <CardContent className="p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center sm:space-x-2">
+              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500 mb-1 sm:mb-0" />
+              <div className="min-w-0">
+                <p className="text-lg sm:text-2xl font-bold truncate">
                   {Math.round(statistics.avgConfidence * 100)}%
                 </p>
-                <p className="text-sm text-muted-foreground">Avg Confidence</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Confidence</p>
               </div>
             </div>
           </CardContent>
@@ -774,15 +774,15 @@ export function AnalysisDashboard({ fileData }: Props) {
 
       {/* Overall Summary */}
       {overallSummary && (
-        <Card>
-          <CardHeader>
+        <Card className="mt-4">
+          <CardHeader className="pb-3">
             <CardTitle className="flex items-center">
               <Brain className="mr-2 h-5 w-5" />
               AI-Generated Summary
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <CardContent className="p-3 sm:p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
               <div>
                 <h4 className="font-medium mb-2">Sentiment Distribution</h4>
                 <div className="space-y-1">
@@ -854,82 +854,91 @@ export function AnalysisDashboard({ fileData }: Props) {
 
       {/* Detailed Results */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 relative z-20">
-        <div className="sticky top-20 z-30 bg-background/95 backdrop-blur-xl pb-4 -mx-4 px-4">
-          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 gap-1 h-auto p-1 relative bg-muted/50 backdrop-blur supports-[backdrop-filter]:bg-muted/30 border-2 shadow-lg rounded-xl">
+        <div className="sticky top-16 sm:top-20 z-30 bg-background/95 backdrop-blur-xl pb-2 sm:pb-4 -mx-2 sm:-mx-4 px-2 sm:px-4">
+          <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-transparent">
+            <TabsList className="inline-flex w-auto sm:grid sm:w-full sm:grid-cols-6 gap-1 sm:gap-1 h-auto p-1 relative bg-muted/50 backdrop-blur supports-[backdrop-filter]:bg-muted/30 border-2 shadow-lg rounded-lg sm:rounded-xl">
             <TabsTrigger 
               value="summary" 
-              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+              className="text-xs sm:text-sm px-2 sm:px-3 py-2 sm:py-3 whitespace-nowrap data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-md sm:rounded-lg font-medium hover:scale-105"
             >
-              <FileText className="h-4 w-4 sm:mr-2" />
+              <FileText className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
               <span className="hidden sm:inline">Summary</span>
             </TabsTrigger>
             <TabsTrigger 
               value="wordcloud" 
-              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+              className="text-xs sm:text-sm px-2 sm:px-3 py-2 sm:py-3 whitespace-nowrap data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-md sm:rounded-lg font-medium hover:scale-105"
             >
-              <Cloud className="h-4 w-4 sm:mr-2" />
+              <Cloud className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
               <span className="hidden sm:inline">Word Cloud</span>
             </TabsTrigger>
             <TabsTrigger 
               value="insights" 
-              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+              className="text-xs sm:text-sm px-2 sm:px-3 py-2 sm:py-3 whitespace-nowrap data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-md sm:rounded-lg font-medium hover:scale-105"
             >
-              <Brain className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">Data Insights</span>
+              <Brain className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Insights</span>
             </TabsTrigger>
             <TabsTrigger 
               value="comments" 
-              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+              className="text-xs sm:text-sm px-2 sm:px-3 py-2 sm:py-3 whitespace-nowrap data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-md sm:rounded-lg font-medium hover:scale-105"
             >
-              <MessageSquare className="h-4 w-4 sm:mr-2" />
+              <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
               <span className="hidden sm:inline">Comments</span>
             </TabsTrigger>
             <TabsTrigger 
               value="emotions" 
-              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+              className="text-xs sm:text-sm px-2 sm:px-3 py-2 sm:py-3 whitespace-nowrap data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-md sm:rounded-lg font-medium hover:scale-105"
             >
-              <Heart className="h-4 w-4 sm:mr-2" />
+              <Heart className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
               <span className="hidden sm:inline">Emotions</span>
             </TabsTrigger>
             <TabsTrigger 
-              value="export" 
-              className="text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-lg font-medium hover:scale-105"
+              value="models" 
+              className="text-xs sm:text-sm px-2 sm:px-3 py-2 sm:py-3 whitespace-nowrap lg:hidden data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-md sm:rounded-lg font-medium hover:scale-105"
             >
-              <Download className="h-4 w-4 sm:mr-2" />
+              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Models</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="export" 
+              className="text-xs sm:text-sm px-2 sm:px-3 py-2 sm:py-3 whitespace-nowrap data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/50 transition-all duration-300 rounded-md sm:rounded-lg font-medium hover:scale-105"
+            >
+              <Download className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
               <span className="hidden sm:inline">Export</span>
             </TabsTrigger>
           </TabsList>
+          </div>
         </div>
 
-        <TabsContent value="summary" className="space-y-6 relative z-10 mt-4">
+        <TabsContent value="summary" className="space-y-4 sm:space-y-6 relative z-10 mt-2 sm:mt-4">
           {overallSummary && (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Overall Summary Card */}
               <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-900 border-blue-200 dark:border-blue-800">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-blue-900 dark:text-blue-100">
-                    <FileText className="mr-2 h-6 w-6" />
+                <CardHeader className="p-3 sm:p-6">
+                  <CardTitle className="flex items-center text-blue-900 dark:text-blue-100 text-base sm:text-lg">
+                    <FileText className="mr-2 h-4 w-4 sm:h-6 sm:w-6" />
                     Overall Analysis Summary
                   </CardTitle>
-                  <CardDescription className="text-blue-700 dark:text-blue-300">
+                  <CardDescription className="text-blue-700 dark:text-blue-300 text-xs sm:text-sm">
                     Comprehensive insights from all {statistics.total} comments
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 border border-blue-200 dark:border-blue-700 shadow-sm">
-                    <p className="text-gray-900 dark:text-gray-100 leading-relaxed text-lg font-medium">
+                <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-6">
+                  <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-blue-200 dark:border-blue-700 shadow-sm">
+                    <p className="text-gray-900 dark:text-gray-100 leading-relaxed text-sm sm:text-lg font-medium">
                       {overallSummary.text}
                     </p>
                   </div>
                   {/* Only render keyInsights if it exists and is an array */}
                   {Array.isArray(overallSummary.keyInsights) && (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 mt-3 sm:mt-6">
                       {overallSummary.keyInsights.map((insight: string, index: number) => (
-                        <div key={index} className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700 text-center">
-                          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
+                        <div key={index} className="bg-white dark:bg-gray-800 rounded-lg p-2 sm:p-3 border border-blue-200 dark:border-blue-700 text-center">
+                          <div className="text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
                             {insight.split(' ')[0]}
                           </div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                          <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                             {insight.split(' ').slice(1).join(' ')}
                           </div>
                         </div>
@@ -1355,19 +1364,19 @@ export function AnalysisDashboard({ fileData }: Props) {
           </div>
         </TabsContent>
 
-        <TabsContent value="comments" className="relative z-10 mt-4">
+        <TabsContent value="comments" className="relative z-10 mt-2 sm:mt-4">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <MessageSquare className="mr-2 h-5 w-5" />
+            <CardHeader className="p-3 sm:p-6">
+              <CardTitle className="flex items-center text-base sm:text-lg">
+                <MessageSquare className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Individual Comment Analysis
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-xs sm:text-sm">
                 Clean and detailed view of each comment with sentiment, confidence, and emotion analysis
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-6 max-h-96 overflow-y-auto">
+            <CardContent className="p-3 sm:p-6">
+              <div className="space-y-3 sm:space-y-6 max-h-96 overflow-y-auto">
                 {analysisResults.slice(0, 50).map((result) => {
                   const getSentimentIcon = (sentiment: string) => {
                     switch(sentiment) {
@@ -1395,12 +1404,12 @@ export function AnalysisDashboard({ fileData }: Props) {
                   }
 
                   return (
-                    <div key={result.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-600">
+                    <div key={result.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 sm:p-6 hover:shadow-lg transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-600">
                       {/* Comment Header */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center space-x-3">
+                      <div className="flex items-center justify-between mb-2 sm:mb-4">
+                        <div className="flex items-center space-x-2 sm:space-x-3">
                           <Badge variant="outline" className="text-xs font-medium text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600">
-                            Comment #{result.id}
+                            #{result.id}
                           </Badge>
                           <Badge variant="secondary" className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                             {result.language}
@@ -1409,9 +1418,9 @@ export function AnalysisDashboard({ fileData }: Props) {
                       </div>
 
                       {/* Comment Text - Main Focus */}
-                      <div className="mb-6">
-                        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border-l-4 border-blue-400 dark:border-blue-600">
-                          <p className="text-gray-800 dark:text-gray-200 leading-relaxed text-base">
+                      <div className="mb-3 sm:mb-6">
+                        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-2 sm:p-4 border-l-4 border-blue-400 dark:border-blue-600">
+                          <p className="text-gray-800 dark:text-gray-200 leading-relaxed text-sm sm:text-base">
                             "{result.originalText}"
                           </p>
                         </div>
@@ -1631,21 +1640,117 @@ export function AnalysisDashboard({ fileData }: Props) {
           </div>
         </TabsContent>
 
-        <TabsContent value="export" className="relative z-10 mt-4">
+        {/* Models Tab - Mobile Only */}
+        <TabsContent value="models" className="relative z-10 mt-2 sm:mt-4 lg:hidden">
+          <div className="space-y-4">
+            <Card className="bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 border-slate-200 dark:border-slate-700">
+              <CardHeader className="p-3 sm:p-6">
+                <CardTitle className="flex items-center text-slate-900 dark:text-slate-100 text-base sm:text-lg">
+                  <Sparkles className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-purple-600 dark:text-purple-400" />
+                  Models Used
+                </CardTitle>
+                <CardDescription className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm">
+                  AI models deployed for this analysis
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-6">
+                {Object.entries(activeModels).map(([key, model]) => (
+                  <div key={key} className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-slate-200 dark:border-slate-600 shadow-sm">
+                    <div className="flex items-start space-x-2 sm:space-x-3">
+                      <div className="text-xl sm:text-2xl">{model.icon}</div>
+                      <div className="flex-1">
+                        <h4 className={`font-semibold text-sm ${model.textColor} dark:text-slate-300`}>
+                          {model.name}
+                        </h4>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+                          {model.description}
+                        </p>
+                        <div className="mt-2 flex items-center text-xs text-slate-500 dark:text-slate-500">
+                          <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                          <span>Active</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Analysis Stats */}
+                <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-200 dark:border-slate-600">
+                  <h4 className="font-semibold text-sm text-slate-900 dark:text-slate-100 mb-3">
+                    Analysis Performance
+                  </h4>
+                  <div className="space-y-2 sm:space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-slate-600 dark:text-slate-400">Processing Time</span>
+                      <Badge variant="secondary" className="text-xs">
+                        ~{Math.ceil(statistics.total / 10)}s
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-slate-600 dark:text-slate-400">Model Accuracy</span>
+                      <Badge variant="secondary" className="text-xs">
+                        {Math.round(statistics.avgConfidence * 100)}%
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-slate-600 dark:text-slate-400">Data Points</span>
+                      <Badge variant="secondary" className="text-xs">
+                        {statistics.total}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-slate-600 dark:text-slate-400">Languages Detected</span>
+                      <Badge variant="secondary" className="text-xs">
+                        {Object.keys(statistics.languageCounts).length}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Technical Details */}
+                <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-slate-200 dark:border-slate-600">
+                  <h4 className="font-semibold text-sm text-slate-900 dark:text-slate-100 mb-3">
+                    Technical Details
+                  </h4>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-400">
+                    <div className="flex items-center space-x-2">
+                      <Globe className="h-3 w-3" />
+                      <span>Multilingual</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Zap className="h-3 w-3" />
+                      <span>Real-time</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Target className="h-3 w-3" />
+                      <span>Batch Processing</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Users className="h-3 w-3" />
+                      <span>India Optimized</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="export" className="relative z-10 mt-2 sm:mt-4">
           <Card>
-            <CardHeader>
-              <CardTitle>Export Results</CardTitle>
-              <CardDescription>
+            <CardHeader className="p-3 sm:p-6">
+              <CardTitle className="text-base sm:text-lg">Export Results</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">
                 Download your analysis results in various formats
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Button onClick={exportResults} className="w-full">
+            <CardContent className="p-3 sm:p-6">
+              <div className="space-y-3 sm:space-y-4">
+                <Button onClick={exportResults} className="w-full text-sm sm:text-base">
                   <Download className="mr-2 h-4 w-4" />
                   Download as CSV
                 </Button>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   The CSV file will contain all {statistics.total} analyzed comments with their sentiment scores, emotions, and summaries.
                 </p>
               </div>
@@ -1656,7 +1761,7 @@ export function AnalysisDashboard({ fileData }: Props) {
       </div>
 
       {/* Models Used Panel - Right Side */}
-      <div className="w-80 shrink-0">
+      <div className="hidden lg:block w-80 shrink-0">
         <div className="sticky top-6">
           <Card className="bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 border-slate-200 dark:border-slate-700 shadow-lg">
             <CardHeader className="pb-4">
