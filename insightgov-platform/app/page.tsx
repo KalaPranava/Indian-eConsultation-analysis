@@ -2,7 +2,7 @@ import { HeroSection } from "@/components/hero-section"
 import { FeaturesSection } from "@/components/features-section"
 import { GoalsSection } from "@/components/goals-section"
 import { DashboardPreview } from "@/components/dashboard-preview"
-import { OperationalAdvantages } from "@/components/operational-advantages"
+import { OperationalAdvantagesWrapper } from "@/components/operational-advantages-wrapper"
 
 export default function HomePage() {
   return (
@@ -11,7 +11,7 @@ export default function HomePage() {
       <FeaturesSection />
       <GoalsSection />
   <DashboardPreview />
-  <OperationalAdvantages />
+  <OperationalAdvantagesWrapper />
     </main>
   )
 }

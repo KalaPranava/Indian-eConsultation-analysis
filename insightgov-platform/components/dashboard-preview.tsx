@@ -7,7 +7,7 @@ import Link from "next/link"
 
 export function DashboardPreview() {
   return (
-  <section id="interactive-dashboard" className="py-24 bg-background relative z-[60] isolate debug-dashboard-section">
+  <section id="interactive-dashboard" className="py-24 bg-background relative z-0 scroll-mt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Interactive Dashboard</h2>
@@ -19,7 +19,7 @@ export function DashboardPreview() {
               <Button
                 asChild
                 size="lg"
-                className="relative z-[70] bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 pointer-events-auto cursor-pointer shadow-lg"
+                className="relative bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 pointer-events-auto cursor-pointer shadow-lg"
               >
                 <Link href="/dashboard" aria-label="Start Analysis Now" prefetch className="pointer-events-auto">
                   <span className="inline-flex items-center">Start Analysis Now<Upload className="ml-2 h-5 w-5" /></span>
@@ -34,7 +34,7 @@ export function DashboardPreview() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="relative z-[70] text-lg px-8 py-6 border-2 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 pointer-events-auto cursor-pointer shadow-sm"
+                className="relative text-lg px-8 py-6 border-2 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 pointer-events-auto cursor-pointer shadow-sm"
               >
                 <Link href="/dashboard#demo" aria-label="Try Demo Analysis" prefetch className="pointer-events-auto">
                   <span className="inline-flex items-center">Try Demo Analysis<Sparkles className="ml-2 h-5 w-5" /></span>

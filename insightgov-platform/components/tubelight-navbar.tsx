@@ -26,8 +26,8 @@ export function TubelightNavBar({ items, className }: NavBarProps) {
     { name: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
     // Use absolute path so navigating from /dashboard goes back to home and scrolls
     { name: "Advantages", url: "/#operational-advantages", icon: Layers3 },
-    { name: "Policy AI", url: "/#operational-advantages", icon: Brain },
-    { name: "Compare", url: "/#operational-advantages", icon: BarChart3 },
+    { name: "Policy AI", url: "/#preview-policy", icon: Brain },
+    { name: "Compare", url: "/#preview-comparative", icon: BarChart3 },
   ]
 
   const [activeTab, setActiveTab] = useState<string>(defaultItems[0]?.name ?? "")
@@ -71,7 +71,17 @@ export function TubelightNavBar({ items, className }: NavBarProps) {
             <Link
               key={item.name}
               href={item.url}
-              onClick={() => setActiveTab(item.name)}
+              onClick={(e) => {
+                setActiveTab(item.name)
+                // Dispatch custom event for Policy AI and Compare
+                if (item.name === "Policy AI") {
+                  console.log('Policy AI clicked in tubelight navbar')
+                  window.dispatchEvent(new CustomEvent('openPreview', { detail: { feature: 'policy' } }))
+                } else if (item.name === "Compare") {
+                  console.log('Compare clicked in tubelight navbar')
+                  window.dispatchEvent(new CustomEvent('openPreview', { detail: { feature: 'comparative' } }))
+                }
+              }}
               className={cn(
                 "relative cursor-pointer text-xs sm:text-sm font-medium px-5 py-2 rounded-full transition-colors",
                 "text-foreground/80 hover:text-primary",

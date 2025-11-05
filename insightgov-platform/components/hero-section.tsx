@@ -11,7 +11,7 @@ export function HeroSection() {
   }
 
   return (
-    <section className="min-h-[70vh] sm:min-h-[82vh] flex items-center justify-center relative overflow-hidden gradient-bg py-12 sm:py-0">
+    <section className="min-h-[70vh] sm:min-h-[82vh] flex items-center justify-center relative overflow-hidden gradient-bg pt-20 sm:pt-24 pb-12 sm:pb-16">
       <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">

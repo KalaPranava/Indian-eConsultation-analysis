@@ -688,7 +688,7 @@ export function AnalysisDashboard({ fileData }: Props) {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 relative z-10 px-2 sm:px-4">
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 relative px-2 sm:px-4">
       {/* Main Content */}
       <div className="flex-1 space-y-4 lg:space-y-6 min-w-0">
         {/* Demo Mode Banner */}
@@ -853,8 +853,8 @@ export function AnalysisDashboard({ fileData }: Props) {
       )}
 
       {/* Detailed Results */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 relative z-20">
-        <div className="sticky top-16 sm:top-20 z-30 bg-background/95 backdrop-blur-xl pb-2 sm:pb-4 -mx-2 sm:-mx-4 px-2 sm:px-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 relative">
+        <div className="sticky top-16 sm:top-20 z-40 bg-background/95 backdrop-blur-xl pb-2 sm:pb-4 -mx-2 sm:-mx-4 px-2 sm:px-4 shadow-sm">
           <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-transparent">
             <TabsList className="inline-flex w-auto sm:grid sm:w-full sm:grid-cols-6 gap-1 sm:gap-1 h-auto p-1 relative bg-muted/50 backdrop-blur supports-[backdrop-filter]:bg-muted/30 border-2 shadow-lg rounded-lg sm:rounded-xl">
             <TabsTrigger 
@@ -910,7 +910,7 @@ export function AnalysisDashboard({ fileData }: Props) {
           </div>
         </div>
 
-        <TabsContent value="summary" className="space-y-4 sm:space-y-6 relative z-10 mt-2 sm:mt-4">
+        <TabsContent value="summary" className="space-y-4 sm:space-y-6 relative mt-2 sm:mt-4">
           {overallSummary && (
             <div className="space-y-4 sm:space-y-6">
               {/* Overall Summary Card */}
@@ -998,7 +998,7 @@ export function AnalysisDashboard({ fileData }: Props) {
           )}
         </TabsContent>
 
-        <TabsContent value="wordcloud" className="space-y-6 relative z-10 mt-4">
+        <TabsContent value="wordcloud" className="space-y-6 relative mt-4">
           <Card className="bg-gradient-to-br from-gray-50 to-slate-100 dark:from-gray-900 dark:to-slate-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="flex items-center text-gray-900 dark:text-gray-100">
@@ -1110,7 +1110,7 @@ export function AnalysisDashboard({ fileData }: Props) {
           </Card>
         </TabsContent>
 
-        <TabsContent value="insights" className="space-y-6 relative z-10 mt-4">
+        <TabsContent value="insights" className="space-y-6 relative mt-4">
           {/* Data Visualization Dashboard */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
@@ -1364,7 +1364,7 @@ export function AnalysisDashboard({ fileData }: Props) {
           </div>
         </TabsContent>
 
-        <TabsContent value="comments" className="relative z-10 mt-2 sm:mt-4">
+        <TabsContent value="comments" className="relative mt-2 sm:mt-4">
           <Card>
             <CardHeader className="p-3 sm:p-6">
               <CardTitle className="flex items-center text-base sm:text-lg">
@@ -1521,7 +1521,7 @@ export function AnalysisDashboard({ fileData }: Props) {
           </Card>
         </TabsContent>
 
-        <TabsContent value="emotions" className="relative z-10 mt-4">
+        <TabsContent value="emotions" className="relative mt-4">
           <div className="space-y-6">
             {/* Emotion Overview Cards */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -1641,7 +1641,7 @@ export function AnalysisDashboard({ fileData }: Props) {
         </TabsContent>
 
         {/* Models Tab - Mobile Only */}
-        <TabsContent value="models" className="relative z-10 mt-2 sm:mt-4 lg:hidden">
+        <TabsContent value="models" className="relative mt-2 sm:mt-4 lg:hidden">
           <div className="space-y-4">
             <Card className="bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 border-slate-200 dark:border-slate-700">
               <CardHeader className="p-3 sm:p-6">
@@ -1736,7 +1736,7 @@ export function AnalysisDashboard({ fileData }: Props) {
           </div>
         </TabsContent>
 
-        <TabsContent value="export" className="relative z-10 mt-2 sm:mt-4">
+        <TabsContent value="export" className="relative mt-2 sm:mt-4">
           <Card>
             <CardHeader className="p-3 sm:p-6">
               <CardTitle className="text-base sm:text-lg">Export Results</CardTitle>
