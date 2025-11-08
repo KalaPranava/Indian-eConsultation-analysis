@@ -12,6 +12,15 @@ export const metadata: Metadata = {
   title: "InsightGov - Turning Voices into Action",
   description: "AI-powered sentiment analysis platform for citizen feedback and policy insights - Demo Mode",
   generator: "v0.app",
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/favicon.ico' },
+    ],
+    apple: [
+      { url: '/favicon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 }
 
 export default function RootLayout({
